@@ -1,5 +1,6 @@
 package com.cybersoft.food_project.controller;
 
+import com.cybersoft.food_project.jwt.JwtTokenHelper;
 import com.cybersoft.food_project.payload.request.SignInRequest;
 import com.cybersoft.food_project.payload.response.DataResponse;
 import com.cybersoft.food_project.service.LoginService;
@@ -24,6 +25,9 @@ public class LoginController {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    JwtTokenHelper jwtTokenHelper;
+
     @GetMapping("/test")
     public String test(){
         return "Hello ABC";
@@ -35,14 +39,18 @@ public class LoginController {
 
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(signInRequest.getUsername(), signInRequest.getPassword());
-        Authentication auth = authenticationManager.authenticate(authRequest);
+        Authentication auth = authenticationManager.authenticate(authRequest); // nếu dược xác thực thành công bên CustomAuthenProvider thì sẽ có giá trị
+                                                                               //  auth --> nếu ko thì code sẽ dừng và quăng ra 403
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
+        String token = jwtTokenHelper.generateToken(signInRequest.getUsername()); // tạo token lưu username
+        String decodeToken = jwtTokenHelper.decodeToken(token);
+
 
         DataResponse dataResponse = new DataResponse();
         dataResponse.setStatus(HttpStatus.OK.value());
-        dataResponse.setDescription("");
-        dataResponse.setData("");
+        dataResponse.setDescription(decodeToken);
+        dataResponse.setData(token);
         dataResponse.setSuccess(loginService.checkLogin(signInRequest.getUsername(), signInRequest.getPassword()));
 
         return new ResponseEntity<>(dataResponse, HttpStatus.OK);
