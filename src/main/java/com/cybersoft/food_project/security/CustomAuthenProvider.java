@@ -30,8 +30,6 @@ public class CustomAuthenProvider implements AuthenticationProvider {
 
         UserEntity user = loginService.checkLogin(userName);
 
-
-
         if(user != null){
             boolean isPasswordMatched = passwordEncoder.matches(password, user.getPassword());
             if (isPasswordMatched){
