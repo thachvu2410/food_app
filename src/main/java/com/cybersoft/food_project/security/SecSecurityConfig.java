@@ -1,5 +1,6 @@
 package com.cybersoft.food_project.security;
 
+import com.cybersoft.food_project.jwt.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,12 +24,13 @@ public class SecSecurityConfig {
     @Autowired
     CustomAuthenProvider customAuthenProvider;
 
+    @Autowired
+    JwtTokenFilter jwtTokenFilter;
+
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-
         authenticationManagerBuilder.authenticationProvider(customAuthenProvider);
-
         return authenticationManagerBuilder.build();
     }
 
@@ -71,10 +74,13 @@ public class SecSecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/signin").permitAll()
+                .antMatchers("/refresh-token").permitAll()
                 .antMatchers("/signin/test").authenticated()
                 //.permitAll() // vì link signin chưa đăng nhập lấy gì mà chứng
                 .anyRequest().authenticated();
 
+        // thêm 1 filter trước 1 filter nào đó
+        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
