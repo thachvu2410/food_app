@@ -75,6 +75,7 @@ public class SecSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/signin").permitAll()
                 .antMatchers("/refresh-token").permitAll()
+                .antMatchers("/file/**").permitAll()
                 .antMatchers("/signin/test").authenticated()
                 //.permitAll() // vì link signin chưa đăng nhập lấy gì mà chứng
                 .anyRequest().authenticated();
