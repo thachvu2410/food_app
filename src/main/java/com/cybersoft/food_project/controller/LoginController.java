@@ -34,7 +34,7 @@ public class LoginController {
 
     @GetMapping("/test")
     public String test(){
-        return "Hello ABC";
+        return "This Page is used to check authen request";
     }
 
     @PostMapping("")

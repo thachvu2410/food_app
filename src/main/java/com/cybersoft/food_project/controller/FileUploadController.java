@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/file")
+@RequestMapping(value = "/file")
 public class FileUploadController {
 
     @Autowired

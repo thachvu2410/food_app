@@ -43,7 +43,6 @@ public class JwtTokenHelper {
                 .build()
                 .parseClaimsJws(token)
                 .getBody().getSubject(); // lấy data đã chuyển thành token ở trên ngoài ra còn .getIssuedAt, .getExpiration
-
     }
 
     public boolean validateToken(String token){
