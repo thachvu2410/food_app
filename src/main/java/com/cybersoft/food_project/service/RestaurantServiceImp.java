@@ -46,7 +46,6 @@ public class RestaurantServiceImp implements RestaurantService{
         RestaurantDetailDTO restaurantDetailDTO = new RestaurantDetailDTO();
         if (restaurantEntity.isPresent()){
             // co gia tri thi xu ly
-
             restaurantDetailDTO.setTitle(restaurantEntity.get().getName());
             restaurantDetailDTO.setImage(restaurantEntity.get().getImage());
 //            restaurantDetailDTO.setDescription("");
